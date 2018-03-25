@@ -266,11 +266,33 @@ Consider the following algorithm for finding the smallest element in an unsorted
 
 \begin{enumerate}[label=(\alph*)]
 	\item In the worst case, how many times does \alg{RandomMin} execute line $(\star)$?
-	\item What is the probability that line $(\star)$ is executed during the $n$th iteration of the for loop?
+	\item What is the probability that line $(\star)$ is executed during the $i$th iteration of the for loop?
 	\item What is the \emph{exact} expected number of executions of line $(\star)$?
 \end{enumerate}
 
 \solution\\
+
+\part
+
+In the worst case, \alg{RandomMin} retrieves the elements in descending order, so it must re-assign $min$ (in line $(\star)$) a total of $n$ times.\\
+
+\part
+
+If line $(\star)$ is executed during the $i$th iteration of the for loop, this means that the randomly selected element is smaller than the previous $i-1$ randomly selected elements. Essentially, we have a set of $i$ elements, and we want to know the probability that a specific element (the most recently added element) is the smallest element in that set. We have a single minimal element, and a $\frac{1}{i}$ chance of choosing that minimal element; therefore, the probability that the most recently added element is the minimal element of the set is $\frac{1}{i}$. We can thus conclude that the probability that line $(\star)$ is executed during the $i$th iteration of the for loop is also $\frac{1}{i}$.\\
+
+\part
+
+We know that line $(\star)$ has a $\frac{1}{i}$ probability of being executed during the $i$th iteration of the for loop, so the expected value at each iteration of the for loop is:
+
+\begin{equation}
+	E[T(n)] = 0 \cdot \frac{i-1}{i} + 1 \cdot \frac{1}{i} = \frac{1}{i}
+\end{equation}
+
+We can sum all of these expected values together to determine the expected number of executions of line $(\star)$ during the entire algorithm:
+
+\begin{equation}
+	E[T(n)] = \sum_{k = 1}^{n} \frac{1}{k} = H_n
+\end{equation}
 
 \end{homeworkProblem}
 
