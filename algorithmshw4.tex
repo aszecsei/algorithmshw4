@@ -285,7 +285,7 @@ If line $(\star)$ is executed during the $i$th iteration of the for loop, this m
 We know that line $(\star)$ has a $\frac{1}{i}$ probability of being executed during the $i$th iteration of the for loop, so the expected value at each iteration of the for loop is:
 
 \begin{equation}
-	E[T(n)] = 0 \cdot \frac{i-1}{i} + 1 \cdot \frac{1}{i} = \frac{1}{i}
+	E[T(n)]_{\text{iter}} = 0 \cdot \frac{i-1}{i} + 1 \cdot \frac{1}{i} = \frac{1}{i}
 \end{equation}
 
 We can sum all of these expected values together to determine the expected number of executions of line $(\star)$ during the entire algorithm:
