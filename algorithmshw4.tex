@@ -175,6 +175,73 @@ Consider the following randomized algorithm for generating biased random bits. T
 
 \solution\\
 
+\part
+
+In order for \alg{OneInThree} to return 1, \alg{FairCoin} must return an odd number of 1s before returning a 0. We can begin to enumerate cases: first, that \alg{FairCoin} returns a 1 and then a 0 is $\frac{1}{2} \cdot \frac{1}{2} = \frac{1}{4}$. The probability that \alg{FairCoin} returns 3 1s and then a 0 is $\frac{1}{2} \cdot \frac{1}{2} \cdot \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{16}$. The probability that \alg{FairCoin} returns 5 1s and then a 0 is $\frac{1}{2} \cdot \frac{1}{2} \cdot \frac{1}{2} \cdot \frac{1}{2} \cdot \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{64}$, and so on. Our summation of all cases is then:
+\begin{equation}
+\frac{1}{4} + \frac{1}{16} + \frac{1}{64} + \ldots + \frac{1}{2^{2n}} = \sum_{k = 1}^{\infty} \frac{1}{2^{2k}}
+\end{equation}
+
+This is a geometric series with common ratio $r = \frac{1}{4}$; we can then use the formula $S = \frac{a_1}{1 - r}$ to determine the summation. Using this, we can see that $S = \frac{\frac{1}{4}}{1 - \frac{1}{4}} = \frac{\frac{1}{4}}{\frac{3}{4}} = \frac{1}{3}$. Therefore, \alg{OneInThree} has a $\frac{1}{3}$ probability of returning 1.\\
+
+\part
+
+Since \alg{OneInThree} might never terminate, our expected value of $T(n)$ is:
+\begin{equation}
+	E[T(n)] = \sum_{k = 1}^\infty k \cdot \text{Pr}[T(n) = k]
+\end{equation}
+
+In order for \alg{OneInThree} to terminate with exactly $k$ calls to \alg{FairCoin}, there must have been exactly $k-1$ times that \alg{FairCoin} returned 1 (and \alg{OneInThree} continued recursing), and 1 time it returned 0 (and \alg{OneInThree} stopped recursing). Thus, the combined probability for \alg{OneInThree} to terminate with exactly $k$ calls to \alg{FairCoin} is $\frac{1}{2^k}$. Plugging this back into our equation for $E[T(n)]$:
+
+\begin{equation}
+	\begin{split}
+		E[T(n)] &= \sum_{k = 1}^\infty k \cdot \text{Pr}[T(n) = k]\\
+		&= \sum_{k = 1}^\infty k \cdot \frac{1}{2^k}\\
+		&= 2
+	\end{split}
+\end{equation}
+
+\part
+
+\begin{algorithm}
+	\begin{algorithmic}[1]
+		\Function{FairCoin}{}
+			\State{$c_1 \gets \Call{OneInThree}{}$}
+			\State{$c_2 \gets \Call{OneInThree}{}$}
+			\If{$c_1 = 1$ and $c_2 = 1$}
+				\State{\Return{\Call{FairCoin}{}}}
+			\Else
+				\If{$c_1 = 1$ or $c_2 = 1$}
+					\State{\Return{$1$}}
+				\Else
+					\State{\Return{$0$}}
+				\EndIf
+			\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+The idea for this algorithm is that we break the probability space into 3 partitions: first, the probability that both calls to \alg{OneInThree} return $1$ is $\frac{1}{9}$. The remaining probability is $\frac{8}{9}$; we further divide this into two partitions. The probability that both calls to \alg{OneInThree} returned $0$ is $\frac{4}{9}$; thus, the remaining probability (that only one call to \alg{OneInThree} returned $1$) is $\frac{4}{9}$.\\
+
+Now, the probability that any call to \alg{FairCoin} which actually \emph{returns} will return 0 is clearly $\frac{1}{2}$; the same probability applies to any returning call to \alg{FairCoin} returning 1. Thus, \alg{FairCoin} has an equal probability of returning either 0 or 1.\\
+
+\part
+
+Since \alg{FairCoin} might never terminate, our expected value of $T(n)$ is:
+\begin{equation}
+	E[T(n)] = \sum_{k = 1}^\infty k \cdot \text{Pr}[T(n) = k]
+\end{equation}
+
+In order for \alg{FairCoin} to terminate with exactly $2k$ calls to \alg{OneInThree}, there must have been exactly $k-1$ times that both calls of \alg{OneInThree} returned 1 (and \alg{FairCoin} continued recursing), and 1 time at least one call returned 0 (and \alg{FairCoin} stopped recursing). Thus, the combined probability for \alg{FairCoin} to terminate with exactly $2k$ calls to \alg{FairCoin} is $\frac{1}{9^{k-1}} \cdot \frac{8}{9} = \frac{8}{9^k}$. Plugging this back into our equation for $E[T(n)]$:
+
+\begin{equation}
+	\begin{split}
+		E[T(n)] &= \sum_{k = 1}^\infty 2k \cdot \text{Pr}[T(n) = k]\\
+		&= \sum_{k = 1}^\infty 2k \cdot \frac{8}{9^k}\\
+		&= \frac{9}{4}
+	\end{split}
+\end{equation}
+
 \end{homeworkProblem}
 
 \pagebreak
@@ -185,7 +252,7 @@ Consider the following algorithm for finding the smallest element in an unsorted
 
 \begin{algorithm}
 	\begin{algorithmic}[1]
-		\Function{OneInThree}{$A[1..n]$}
+		\Function{RandomMin}{$A[1..n]$}
 			\State{$min \gets \infty$}
 			\For{$i \gets 1$ to $n$ in random order}
 				\If{$A[i] < min$}
