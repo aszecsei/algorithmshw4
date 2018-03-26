@@ -317,6 +317,63 @@ Describe and analyze a randomized algorithm that determines whether a given numb
 
 \solution\\
 
+\begin{algorithm}
+	\begin{algorithmic}[1]
+		\Function{RandomContains}{$X[1..n], N[1..n], x$}
+			\State{$T \gets$ an array of $\sqrt{n}$ random numbers between 1 and $n$}
+			\State{$hasLowerBound \gets False$} \Comment{We need to be able to handle the case where we do not select any elements less than $x$}
+			\For{$i \gets 1, \sqrt{n}$}
+				\If{$X[T[i]] < x$}
+					\State{$hasLowerBound \gets True$}
+					\Break
+				\EndIf
+			\EndFor
+			\If{$hasLowerBound$}
+				\State{$minDist \gets \infty$}
+				\For{$i \gets 1, \sqrt{n}$}
+					\If{$X[T[i]] < x$ and $x - X[T[i]] < minDist$}
+						\State{$minDist \gets x - X[T[i]]$}
+						\State{$l \gets T[i]$}
+					\EndIf
+				\EndFor
+			\Else
+				\State{$l \gets T[1]$}
+				\For{$i \gets 2, \sqrt{n}$}
+					\If{$X[T[i]] > X[l]$}
+						\State{$l \gets T[i]$}
+					\EndIf
+				\EndFor
+			\EndIf \Comment{We now have the ``closest'' element before $x$ (if it exists) on our linked list}
+			\While{$True$}
+				\If{$X[l] = x$}
+					\State{\Return{$True$}}
+				\Else
+					\State{$prev \gets X[l]$}
+					\State{$l \gets N[l]$}
+					\If{$X[l] < prev$}
+						\If{$hasLowerBound$}
+							\State{\Return{$False$}} \Comment{We wrapped around before we found $x$}
+						\Else
+							\State{$hasLowerBound \gets True$} \Comment{We wrapped around, so we \emph{should} have a lower bound}
+						\EndIf
+					\EndIf
+					\If{$X[l] > x$ and $hasLowerBound$}
+						\State{\Return{$False$}} \Comment{We had a lower bound, but now we've passed where $x$ should have been}
+					\EndIf
+				\EndIf
+			\EndWhile
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+Our algorithm selects $\sqrt{n}$ random pivots in the linked list, and searches them to find the greatest lower bound on our target value. If our target value is less than all of the pivots, it selects the largest pivot. We then walk through the linked list until we either find our target or exceed its value (with suitable edge cases handled if we need to wrap around).\\
+
+First, we would like to show that the expected size $S$ of any of the $\sqrt{n}$ partitions our algorithm generates is, itself, $\sqrt{n}$. As an example, we will have 3 partitions of an array of length 9. We randomly select an element of the array $r$ and two pivots, $p_1$ and $p_2$; without loss of generality, assume $p_1 < p_2$. The probability that $r$ is between the two pivots is $\frac{1}{3}$, as the other two equiprobable alternatives are that $r < p_1$ and $r > p_2$. The probability that any value is in one of the partitions is $\frac{S}{L}$, where $L$ is the length of the array and $S$ is the partition size; thus, the expected length of each partition must be $\frac{1}{3} = \frac{S}{L} \Rightarrow \frac{1}{3} = \frac{S}{9} \Rightarrow S = 3$.\\
+
+We can trivially generalize this for any length array $L$ and number of partitions $P$; the expected partition size must be $\frac{L}{P}$. Since we have $\sqrt{n}$ partitions and an array of size $n$, our expected partition size is $\frac{n}{\sqrt{n}} = \sqrt{n}$.\\
+
+Our algorithm uses $O(\sqrt{n})$ runtime to generate our pivot list and determine which partition contains $x$; it then linearly traverses the relevant partition. Since our expected partition size is \emph{also} $\sqrt{n}$, we can determine our final expected runtime to be $O(\sqrt{n})$.
+
 \end{homeworkProblem}
 
 \pagebreak
