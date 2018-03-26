@@ -428,20 +428,20 @@ The base case of our algorithm is straightforward; if a node is a leaf (represen
 
 The recursive case is somewhat more interesting; we retrieve two random children (sub-lists) of the node and examine their values. If they are the same, we can immediately return this value; no matter what the third child's value is, the majority is already known. However, if the values are \emph{not} the same, one must be a 0 and one must be a 1; the third child acts as a tiebreaker, and we can simply return its value.\\
 
-In order to construct an expected runtime, we will assume that values are evenly distributed. Then, to determine expected runtime, we want to examine the expected number of recursive calls to \alg{Majority}. There's a $\frac{1}{2}$ probability that the first two calls to \alg{Majority} will return the same number (\textbf{0} and \textbf{0} or \textbf{1} and \textbf{1}). In this case, we would perform 2 recursive calls. Similarly, there is a $\frac{1}{2}$ probability that the first two calls to \alg{Majority} returned differing values; in this case, we would perform 3 recursive calls. Therefore, the expected number of recursive calls is $2 \cdot \frac{1}{2} + 3 \cdot \frac{1}{2} = \frac{5}{2}$.\\
+In order to construct an expected runtime, we will assume that the worst-case problem is given; namely, that each possible decision contains a mixed distribution of \textbf{1}s and \textbf{0}s. Then, to determine expected runtime, we want to examine the expected number of recursive calls to \alg{Majority}. There's a $\frac{2}{3}$ chance of selecting one of the duplicate values for the first selection. After this, there is a $\frac{1}{2}$ chance of selecting the other duplicate value, for a total probability of $\frac{2}{6} = \frac{1}{3}$. In this case, we would perform 2 recursive calls. Conversely, there must be a $\frac{2}{3}$ probability that the first two calls to \alg{Majority} returned differing values; in this case, we would perform 3 recursive calls. Therefore, the expected number of recursive calls is $2 \cdot \frac{1}{3} + 3 \cdot \frac{2}{3} = \frac{8}{3}$.\\
 
-We can use this to determine our runtime; namely, $T(n) = \frac{5}{2}T(n-1)$, as we run an expected $\frac{5}{2}$ recursions, and each child has depth of $n-1$. Using annihilators,
+We can use this to determine our runtime; namely, $T(n) = \frac{8}{3}T(n-1)$, as we run an expected $\frac{8}{3}$ recursions, and each child has depth of $n-1$. Using annihilators,
 
 \begin{equation}
 	\begin{split}
-		T(n)   &= \frac{5}{2}T(n-1)   \\
-		T(n+1) &= \frac{5}{2}T(n)     \\
-		T(n+1) - \frac{5}{2}T(n) &= 0 \\
-		\left(\textbf{E}-\frac{5}{2}\right)T(n) &= 0
+		T(n)   &= \frac{8}{3}T(n-1)   \\
+		T(n+1) &= \frac{8}{3}T(n)     \\
+		T(n+1) - \frac{8}{3}T(n) &= 0 \\
+		\left(\textbf{E}-\frac{8}{3}\right)T(n) &= 0
 	\end{split}
 \end{equation}
 
-Our annihilator is thus $(\textbf{E} - \frac{5}{2})$. This gives us the generic solution $T(n) = \alpha \frac{5}{2}^n$ for some unknown constant $\alpha$; therefore, this algorithm runs in $O(\frac{5}{2}^n)$ time.
+Our annihilator is thus $(\textbf{E} - \frac{8}{3})$. This gives us the generic solution $T(n) = \alpha \frac{8}{3}^n$ for some unknown constant $\alpha$; therefore, this algorithm runs in $O(\frac{8}{3}^n)$ time.
 
 \end{homeworkProblem}
 
@@ -458,6 +458,10 @@ Suppose you are given a graph $G$ with weighted edges, and your goal is to find 
 \end{enumerate}
 
 \solution\\
+
+\part
+
+First, let us assume without loss of generality that all edge weights are non-negative.
 
 \end{homeworkProblem}
 
