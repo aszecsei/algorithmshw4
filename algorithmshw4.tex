@@ -370,7 +370,7 @@ Our algorithm selects $\sqrt{n}$ random pivots in the linked list, and searches 
 
 First, we would like to show that the expected size $S$ of any of the $\sqrt{n}$ partitions our algorithm generates is, itself, $\sqrt{n}$. As an example, we will have 3 partitions of an array of length 9. We randomly select an element of the array $r$ and two pivots, $p_1$ and $p_2$; without loss of generality, assume $p_1 < p_2$. The probability that $r$ is between the two pivots is $\frac{1}{3}$, as the other two equiprobable alternatives are that $r < p_1$ and $r > p_2$. The probability that any value is in one of the partitions is $\frac{S}{L}$, where $L$ is the length of the array and $S$ is the partition size; thus, the expected length of each partition must be $\frac{1}{3} = \frac{S}{L} \Rightarrow \frac{1}{3} = \frac{S}{9} \Rightarrow S = 3$.\\
 
-We can trivially generalize this for any length array $L$ and number of partitions $P$; the expected partition size must be $\frac{L}{P}$. Since we have $\sqrt{n}$ partitions and an array of size $n$, our expected partition size is $\frac{n}{\sqrt{n}} = \sqrt{n}$.\\
+We can generalize this for any array length $L$ and number of partitions $P$; the expected partition size must be $\frac{L}{P}$. Since we have $\sqrt{n}$ partitions and an array of size $n$, our expected partition size is $\frac{n}{\sqrt{n}} = \sqrt{n}$.\\
 
 Our algorithm uses $O(\sqrt{n})$ runtime to generate our pivot list and determine which partition contains $x$; it then linearly traverses the relevant partition. Since our expected partition size is \emph{also} $\sqrt{n}$, we can determine our final expected runtime to be $O(\sqrt{n})$.
 
