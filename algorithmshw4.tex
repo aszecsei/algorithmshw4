@@ -380,7 +380,7 @@ Our algorithm uses $O(\sqrt{n})$ runtime to generate our pivot list and determin
 
 \begin{homeworkProblem}
 
-A \emph{majority tree} is a complete binary tree with depth $n$, where every leaf is labeled either 0 or 1. The \emph{value} of a leaf is its label; the \emph{value} of any internal node is the majority of the values of its three children. Consider the problem of computing the value of the root of a majority tree, given the sequence of $3^n$ leaf labels as input. For example, if $n = 2$ and the leaves are labeled 1, 0, 0, 0, 1, 0, 1, 1, 1, the root has value 0.
+A \emph{majority tree} is a complete ternary tree with depth $n$, where every leaf is labeled either 0 or 1. The \emph{value} of a leaf is its label; the \emph{value} of any internal node is the majority of the values of its three children. Consider the problem of computing the value of the root of a majority tree, given the sequence of $3^n$ leaf labels as input. For example, if $n = 2$ and the leaves are labeled 1, 0, 0, 0, 1, 0, 1, 1, 1, the root has value 0.
 
 \begin{figure}[h]
 	\centering
@@ -395,6 +395,53 @@ A \emph{majority tree} is a complete binary tree with depth $n$, where every lea
 \end{enumerate}
 
 \solution\\
+
+\part
+
+In order to determine the value of a node, a deterministic algorithm can use 1, 2, or 3 of its children's values. If an algorithm uses only one child, it has the obvious potential to be wrong (for example, one in which an algorithm only examines a child of value \textbf{1}, while the other two children both have values of \textbf{0}). If an algorithm only examines 2 of its children's values, it can encounter a tie (in which the algorithm examines children of values \textbf{0} and \textbf{1}). It cannot determine which of these values to correctly return \emph{unless} the algorithm also references the third child (as the third child may be either \textbf{0} or \textbf{1}, acting as a tie-breaker). Therefore, for any non-leaf node, the algorithm must examine all 3 of the node's children. The algorithm must be called on every child of the root, and every grandchild, and so on. Since the root has all leaf nodes as its descendents, the algorithm will examine every descendent of the root, which includes all leaf nodes.\\
+
+\part
+
+\begin{algorithm}
+	\begin{algorithmic}[1]
+		\Function{Majority}{$N[1..n]$}
+			\If{$n = 1$}
+				\State{\Return{$N[1]$}}
+			\Else
+				\State{$p_1 \gets N[1..\frac{n}{3}]$}
+				\State{$p_2 \gets N[\frac{n}{3}+1..\frac{2n}{3}]$}
+				\State{$p_3 \gets N[\frac{2n}{3}+1..n]$}
+				\State{$children \gets$ a shuffled list of $p_1$, $p_2$, and $p_3$}
+				\State{$a \gets \Call{Majority}{children[0]}$}
+				\State{$b \gets \Call{Majority}{children[1]}$}
+				\If{$a = b$}
+					\State{\Return{$a$}}
+				\Else
+					\State{\Return{\Call{Majority}{$children[2]$}}}
+				\EndIf
+			\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+The base case of our algorithm is straightforward; if a node is a leaf (represented by a list containing only 1 element), its value can simply be returned.\\
+
+The recursive case is somewhat more interesting; we retrieve two random children (sub-lists) of the node and examine their values. If they are the same, we can immediately return this value; no matter what the third child's value is, the majority is already known. However, if the values are \emph{not} the same, one must be a 0 and one must be a 1; the third child acts as a tiebreaker, and we can simply return its value.\\
+
+In order to construct an expected runtime, we will assume that values are evenly distributed. Then, to determine expected runtime, we want to examine the expected number of recursive calls to \alg{Majority}. There's a $\frac{1}{2}$ probability that the first two calls to \alg{Majority} will return the same number (\textbf{0} and \textbf{0} or \textbf{1} and \textbf{1}). In this case, we would perform 2 recursive calls. Similarly, there is a $\frac{1}{2}$ probability that the first two calls to \alg{Majority} returned differing values; in this case, we would perform 3 recursive calls. Therefore, the expected number of recursive calls is $2 \cdot \frac{1}{2} + 3 \cdot \frac{1}{2} = \frac{5}{2}$.\\
+
+We can use this to determine our runtime; namely, $T(n) = \frac{5}{2}T(n-1)$, as we run an expected $\frac{5}{2}$ recursions, and each child has depth of $n-1$. Using annihilators,
+
+\begin{equation}
+	\begin{split}
+		T(n)   &= \frac{5}{2}T(n-1)   \\
+		T(n+1) &= \frac{5}{2}T(n)     \\
+		T(n+1) - \frac{5}{2}T(n) &= 0 \\
+		\left(\textbf{E}-\frac{5}{2}\right)T(n) &= 0
+	\end{split}
+\end{equation}
+
+Our annihilator is thus $(\textbf{E} - \frac{5}{2})$. This gives us the generic solution $T(n) = \alpha \frac{5}{2}^n$ for some unknown constant $\alpha$; therefore, this algorithm runs in $O(\frac{5}{2}^n)$ time.
 
 \end{homeworkProblem}
 
