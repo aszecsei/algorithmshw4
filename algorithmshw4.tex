@@ -507,9 +507,9 @@ This matches the probability for the unmodified \alg{GuessMinCut} algorithm, so 
 
 \part
 
-In order to determine the runtime of the modified \alg{GuessMinCut} algorithm, we need to first determine the runtime of our \alg{SelectEdge} algorithm. As this simply iterates twice over the number of edges in the graph, it has a $O(n^2)$ runtime complexity, since there are at most $\frac{n(n-1)}{2}$ edges in a graph.\\
+In order to determine the runtime of the modified \alg{GuessMinCut} algorithm, we need to first determine the runtime of our \alg{SelectEdge} algorithm. As this simply iterates twice over the number of edges in the graph, it has a $O(m)$ runtime complexity, where $m$ is the number of edges in the graph. As we may be given a multigraph, we cannot bound $m$ in terms of $n$.\\
 
-The \alg{GuessMinCut} algorithm requires that we iterate over each vertex in $G$, picking random edges and collapsing them. Picking a random edge, as we just determined, requires $O(n^2)$ time, while collapsing an edge only requires $O(n)$ time. Therefore, the costly operation is picking a random edge, which must happen once for each vertex; the total runtime of the modified \alg{GuessMinCut} algorithm is thus $O(n^3)$.
+The \alg{GuessMinCut} algorithm requires that we iterate over each vertex in $G$, picking random edges and collapsing them. Picking a random edge, as we just determined, requires $O(m)$ time, while collapsing an edge requires $O(n)$ time. Therefore, the total runtime of the modified \alg{GuessMinCut} algorithm is $O(n(n+m)) = O(n^2 + nm)$.
 
 \end{homeworkProblem}
 
