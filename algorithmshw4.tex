@@ -461,7 +461,49 @@ Suppose you are given a graph $G$ with weighted edges, and your goal is to find 
 
 \part
 
-First, let us assume without loss of generality that all edge weights are non-negative.
+\begin{algorithm}
+	\begin{algorithmic}[1]
+		\Function{SelectEdge}{$G$}
+			\State{$t \gets 0$}
+			\ForAll{$e$ in $G.edges$}
+				\State{$t \gets t + e.weight$} \Comment{Get total edge weights}
+			\EndFor
+			\State{$r \gets$ a random number between 0 and $t$}
+			\State{$i \gets 0$} \Comment{$i$ accumulates edge weights until we pass our random number}
+			\ForAll{$e$ in $G.edges$}
+				\State{$i \gets i + e.weight$}
+				\If{$i > r$}
+					\State{\Return{$e$}}
+				\EndIf
+			\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\part
+
+Assume without loss of generality that we are given a graph $G$ with $m$ edges, which has a unique min cut consisting of $k$ edges with weights $w_1, w_2, ..., w_k$. Let the weight of the min cut be $W_C$, and the weight of the graph be $W_G$.\\
+
+We can define the probability that we choose an edge in the min cut as $\frac{W_C}{W_G}$. Since $W_C$ is the min cut, we know that every possible vertex-isolating cut of $G$ must be at least $W_C$; that is, for all vertices $v$, the sum of the weights of all edges connected to $v$ must be greater than $W_C$.\\
+
+For each vertex, we can obtain a vertex-isolating cut; which transforms our inequality into:
+
+\begin{equation}
+	\begin{split}
+		\sum_{v \in V} \sum_{e = (v, v')} w_e &\geq \sum_{v \in V} W_C\\
+		\sum_{v \in V} \sum_{e = (v, v')} w_e &\geq n \cdot W_C
+	\end{split}
+\end{equation}
+
+The handshake lemma says that the sum of the degrees of all vertices is equal to $2m$, so our inequality can further be transformed into $2 \sum_{e \in E} w_e = 2 \cdot W_G \geq n \cdot W_C$. Simple algebra suffices to transform this into:
+
+\begin{equation}
+	\frac{W_C}{W_G} \geq \frac{2}{n}
+\end{equation}
+
+The probability that the cut we arrive at is optimal means that none of the edges within the cut was selected by our algorithm; the probability that no cut was selected during an iteration is $1 - \frac{W_C}{W_G} = 1 - \frac{2}{n}$.\\
+
+This matches the probability for the unmodified \alg{GuessMinCut} algorithm, so by the same logic as is used to determine that probability of success, the probability of success of our modified \alg{GuessMinCut} algorithm will \emph{also} be $\Omega(1/n^2)$.\\
 
 \end{homeworkProblem}
 
