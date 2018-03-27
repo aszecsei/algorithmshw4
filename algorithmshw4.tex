@@ -501,7 +501,7 @@ The handshake lemma says that the sum of the degrees of all vertices is equal to
 	\frac{W_C}{W_G} \leq \frac{2}{n}
 \end{equation}
 
-The probability that the cut we arrive at is optimal means that none of the edges within the cut was selected by our algorithm; the probability that no cut was selected during an iteration is $1 - \frac{W_C}{W_G} \geq 1 - \frac{2}{n}$.\\
+The event that we arrived at an optimal cut means that none of the edges within the cut was selected by our algorithm; the probability that no edge in the min cut was selected during an iteration is $1 - \frac{W_C}{W_G} \geq 1 - \frac{2}{n}$.\\
 
 This matches the probability for the unmodified \alg{GuessMinCut} algorithm, so by the same logic as is used to determine that probability of success, the probability of success of our modified \alg{GuessMinCut} algorithm will \emph{also} be $\Omega(1/n^2)$.\\
 
