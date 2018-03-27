@@ -482,7 +482,7 @@ Suppose you are given a graph $G$ with weighted edges, and your goal is to find 
 
 \part
 
-Assume without loss of generality that we are given a graph $G$ with $m$ edges, which has a unique min cut consisting of $k$ edges with weights $w_1, w_2, ..., w_k$. Let the weight of the min cut be $W_C$, and the weight of the graph be $W_G$.\\
+Assume without loss of generality that we are given a graph $G$ with $m$ edges, which has a unique min cut consisting of $k$ edges with weights $w_1, w_2, ..., w_k$. Let the weight of the min cut be $W_C$, and the weight of the graph be $\sum_{e \in E} w_e = W_G$.\\
 
 We can define the probability that we choose an edge in the min cut as $\frac{W_C}{W_G}$. Since $W_C$ is the min cut, we know that every possible vertex-isolating cut of $G$ must be at least $W_C$; that is, for all vertices $v$, the sum of the weights of all edges connected to $v$ must be greater than $W_C$.\\
 
@@ -504,6 +504,12 @@ The handshake lemma says that the sum of the degrees of all vertices is equal to
 The probability that the cut we arrive at is optimal means that none of the edges within the cut was selected by our algorithm; the probability that no cut was selected during an iteration is $1 - \frac{W_C}{W_G} = 1 - \frac{2}{n}$.\\
 
 This matches the probability for the unmodified \alg{GuessMinCut} algorithm, so by the same logic as is used to determine that probability of success, the probability of success of our modified \alg{GuessMinCut} algorithm will \emph{also} be $\Omega(1/n^2)$.\\
+
+\part
+
+In order to determine the runtime of the modified \alg{GuessMinCut} algorithm, we need to first determine the runtime of our \alg{SelectEdge} algorithm. As this simply iterates twice over the number of edges in the graph, it has a $O(n^2)$ runtime complexity, since there are at most $\frac{n(n-1)}{2}$ edges in a graph.\\
+
+The \alg{GuessMinCut} algorithm requires that we iterate over each vertex in $G$, picking random edges and collapsing them. Picking a random edge, as we just determined, requires $O(n^2)$ time, while collapsing an edge only requires $O(n)$ time. Therefore, the costly operation is picking a random edge, which must happen once for each vertex; the total runtime of the modified \alg{GuessMinCut} algorithm is thus $O(n^3)$.
 
 \end{homeworkProblem}
 
